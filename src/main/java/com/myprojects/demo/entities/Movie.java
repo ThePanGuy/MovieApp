@@ -2,7 +2,7 @@ package com.myprojects.demo.entities;
 
 
 import com.myprojects.demo.dto.MovieForm;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.time.LocalDateTime;
 

@@ -7,10 +7,10 @@ import com.myprojects.demo.entities.User;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
 import com.myprojects.demo.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 

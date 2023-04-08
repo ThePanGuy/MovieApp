@@ -4,11 +4,12 @@ import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.services.ReactionService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/reaction")

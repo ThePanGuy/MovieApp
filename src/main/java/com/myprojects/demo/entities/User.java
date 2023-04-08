@@ -1,7 +1,7 @@
 package com.myprojects.demo.entities;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "movie_user")

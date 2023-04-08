@@ -5,8 +5,9 @@ import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
 import com.myprojects.demo.repositories.MovieRepository;
 import com.myprojects.demo.repositories.ReactionRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class ReactionService {

@@ -6,9 +6,9 @@ import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @RestController
