@@ -27,7 +27,7 @@ public class MovieController {
     }
 
     @PostMapping("/{userId}/add")
-    public Movie addMovie(@PathVariable Long userId, @RequestParam MovieForm movieForm) {
+    public Movie addMovie(@PathVariable Long userId, @RequestBody MovieForm movieForm) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
         return movieService.addMovie(user, movieForm);

@@ -1,6 +1,7 @@
 package com.myprojects.demo.exceptions.config;
 
 import com.myprojects.demo.exceptions.ExceptionResponse;
+import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.exceptions.UsernameException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {UsernameException.class})
     protected ResponseEntity<Object> handleUsernameException(UsernameException e, WebRequest request) {
+        log.error("Exception for request: {} message is {}", request, e.getMessage());
+        return this.handleExceptionInternal(e,
+                new ExceptionResponse(e.getMessage()),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                request);
+    }
+
+    @ExceptionHandler(value = {InvalidInputException.class})
+    protected ResponseEntity<Object> handleInvalidInputException(InvalidInputException e, WebRequest request) {
         log.error("Exception for request: {} message is {}", request, e.getMessage());
         return this.handleExceptionInternal(e,
                 new ExceptionResponse(e.getMessage()),
