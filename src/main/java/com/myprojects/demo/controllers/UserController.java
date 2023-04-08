@@ -34,6 +34,12 @@ public class UserController {
         return userService.likeMovie(user, movieId);
     }
 
+    @GetMapping("/{userId}/hates/{movieId}")
+    public Reaction hateMovie(@PathVariable Long userId, @PathVariable Long movieId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
+        return userService.hateMovie(user, movieId);
+    }
     @PostMapping("/new-user")
     public String newUser(@RequestBody UserForm userForm) {
         User user = userService.addUser(userForm.getUsername(), userForm.getPassword());

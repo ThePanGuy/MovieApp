@@ -25,6 +25,9 @@ public class Reaction {
     @Column
     private Boolean isHate;
 
+    @Transient
+    private ReactionType reactionType;
+
     public Reaction() {
     }
 
@@ -70,6 +73,28 @@ public class Reaction {
 
     public void setIsHate(Boolean isHate) {
         this.isHate = isHate;
+    }
+
+    public ReactionType getReactionType() {
+        if (isLike) {
+            return ReactionType.LIKE;
+        } else if (isHate) {
+            return ReactionType.HATE;
+        }
+        return null;
+    }
+
+    public void addReaction(ReactionType reactionType) {
+        switch (reactionType) {
+            case LIKE:
+                isLike = true;
+                isHate = false;
+                break;
+            case HATE:
+                isLike = false;
+                isHate = true;
+                break;
+        }
     }
 
     @Transient

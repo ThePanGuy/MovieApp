@@ -100,6 +100,25 @@ public class Movie {
 
     @Transient
     public void addLike() {
-        this.likes += 1;
+        if (likes == null) likes = 0;
+        likes += 1;
+    }
+
+    @Transient
+    public void removeLike() {
+        if (likes == null) return;
+        likes -= 1;
+    }
+
+    @Transient
+    public void addHate() {
+        if (hates == null) hates = 0;
+        hates += 1;
+    }
+
+    @Transient
+    public void removeHate() {
+        if (hates == null) return;
+        hates -= 1;
     }
 }
