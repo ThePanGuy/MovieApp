@@ -1,6 +1,7 @@
 package com.myprojects.demo.controllers;
 
 import com.myprojects.demo.dto.MovieForm;
+import com.myprojects.demo.dto.UserForm;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
@@ -39,5 +40,11 @@ public class UserController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
         return userService.likeMovie(user, movieId);
+    }
+
+    @PostMapping("/new-user")
+    public String newUser(@RequestBody UserForm userForm) {
+        User user = userService.addUser(userForm.getUsername(), userForm.getPassword());
+        return String.format("New user: %s added", user.getUsername());
     }
 }
