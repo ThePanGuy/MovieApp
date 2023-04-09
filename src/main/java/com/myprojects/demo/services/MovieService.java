@@ -8,10 +8,11 @@ import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,8 +24,11 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public List<Movie> findAllMovies() {
-        return movieRepository.findAll();
+    public Page<Movie> findAllMovies(PageRequest pageRequest, User user) {
+        if (user == null) {
+            return movieRepository.findAll(pageRequest);
+        }
+        return movieRepository.findAllByUploadedBy(user, pageRequest);
     }
 
     @Transactional

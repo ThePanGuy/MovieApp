@@ -3,6 +3,7 @@ package com.myprojects.demo.services;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
+import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
 import com.myprojects.demo.repositories.ReactionRepository;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,7 @@ public class ReactionService {
                 .orElseThrow(() -> new EntityNotFoundException("Movie not found."));
         Reaction reaction = reactionRepository.findByUserAndMovie(user, movie)
                 .orElseThrow(() -> new EntityNotFoundException("There is no reaction for movie: " + movie.getTitle() + " by user: " + user.getUsername()));
-        if (reaction.getReactionType() == null) throw new RuntimeException("No reaction for movie: " + movie.getTitle() + " from user: " + user.getUsername());
+        if (reaction.getReactionType() == null) throw new InvalidInputException("Reaction has already been retracted.");
         switch (reaction.getReactionType()) {
             case LIKE:
                 movie.removeLike();

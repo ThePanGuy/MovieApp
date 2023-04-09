@@ -3,12 +3,16 @@ package com.myprojects.demo.controllers;
 import com.myprojects.demo.dto.MovieForm;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.User;
+import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.UserRepository;
+import com.myprojects.demo.requests.PagingRequest;
 import com.myprojects.demo.services.MovieService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/movie")
@@ -21,9 +25,17 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @GetMapping("/all")
-    public List<Movie> getAllMovies() {
-        return movieService.findAllMovies();
+    @PostMapping("/page")
+    public Page<Movie> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
+        Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("creationDate").descending();
+        PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
+
+        if (pagingRequest.getFilterValue("uploadedBy") != null) {
+            User user = userRepository.findUserByUsername(pagingRequest.getFilterValue("uploadedBy"))
+                    .orElseThrow(() -> new InvalidInputException("There is no user with this username"));
+            return movieService.findAllMovies(pageRequest, user);
+        }
+        return movieService.findAllMovies(pageRequest, null);
     }
 
     @PostMapping("/{userId}/add")
