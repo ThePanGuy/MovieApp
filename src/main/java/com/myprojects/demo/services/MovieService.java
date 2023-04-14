@@ -75,6 +75,7 @@ public class MovieService {
             case HATE:
                 movie.removeLike();
                 movie.addHate();
+                break;
         }
         return movieRepository.save(movie);
     }

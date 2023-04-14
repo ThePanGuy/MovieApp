@@ -33,7 +33,7 @@ public class ReactionService {
         return null;
     }
 
-    public Reaction tryToAddLikeReaction(User user, Movie movie) {
+    private Reaction tryToAddLikeReaction(User user, Movie movie) {
         Optional<Reaction> reaction = reactionRepository.findByUserAndMovie(user, movie);
         if (reaction.isPresent()) {
             return updateReaction(reaction.get(), Reaction.ReactionType.LIKE);
@@ -41,7 +41,7 @@ public class ReactionService {
         return addNewReaction(user, movie, Reaction.ReactionType.LIKE);
     }
 
-    public Reaction tryToAddHateReaction(User user, Movie movie) {
+    private Reaction tryToAddHateReaction(User user, Movie movie) {
         Optional<Reaction> reaction = reactionRepository.findByUserAndMovie(user, movie);
         if (reaction.isPresent()) {
             return updateReaction(reaction.get(), Reaction.ReactionType.HATE);
@@ -49,7 +49,7 @@ public class ReactionService {
         return addNewReaction(user, movie, Reaction.ReactionType.HATE);
     }
 
-    public Reaction addNewReaction(User user, Movie movie, Reaction.ReactionType reactionType) {
+    private Reaction addNewReaction(User user, Movie movie, Reaction.ReactionType reactionType) {
         Reaction newReaction = new Reaction(user, movie);
         movieService.addMovieReaction(movie, reactionType);
         newReaction.addReaction(reactionType);
