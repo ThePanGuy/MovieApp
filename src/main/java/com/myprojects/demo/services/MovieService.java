@@ -1,6 +1,7 @@
 package com.myprojects.demo.services;
 
 import com.myprojects.demo.dto.MovieForm;
+import com.myprojects.demo.dto.MovieReactions;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
@@ -29,6 +30,10 @@ public class MovieService {
             return movieRepository.findAll(pageRequest);
         }
         return movieRepository.findAllByUploadedBy(user, pageRequest);
+    }
+
+    public MovieReactions getMovieReactions(Movie movie) {
+        return new MovieReactions(movie);
     }
 
     @Transactional
