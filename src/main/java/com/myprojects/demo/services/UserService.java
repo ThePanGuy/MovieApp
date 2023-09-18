@@ -34,7 +34,7 @@ public class UserService {
     }
 
     @Transactional
-    public Reaction likeMovie(User user, Long movieId) {
+    public Reaction likeOrUnlikeMovie(User user, Long movieId) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
         if (movie.getUploadedBy() == user) {
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     @Transactional
-    public Reaction hateMovie(User user, Long movieId) {
+    public Reaction hateOrUnhateMovie(User user, Long movieId) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
         if (movie.getUploadedBy() == user) {

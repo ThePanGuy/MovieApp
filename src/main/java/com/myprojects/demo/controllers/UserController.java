@@ -7,8 +7,6 @@ import com.myprojects.demo.entities.User;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.services.MovieService;
 import com.myprojects.demo.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,7 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final UserRepository userRepository;
     private final MovieService movieService;
@@ -38,8 +35,7 @@ public class UserController {
     public MovieReactions likeMovie(@PathVariable Long userId, @PathVariable Long movieId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
-        Reaction reaction = userService.likeMovie(user, movieId);
-        log.info("User with id: {} liked movie with id: {}", userId, movieId);
+        Reaction reaction = userService.likeOrUnlikeMovie(user, movieId);
         return movieService.getMovieReactions(reaction.getMovie());
     }
 
@@ -47,10 +43,10 @@ public class UserController {
     public MovieReactions hateMovie(@PathVariable Long userId, @PathVariable Long movieId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
-        Reaction reaction = userService.hateMovie(user, movieId);
-        log.info("User with id: {} hated movie with id: {}", userId, movieId);
+        Reaction reaction = userService.hateOrUnhateMovie(user, movieId);
         return movieService.getMovieReactions(reaction.getMovie());
     }
+
     @PostMapping("/new-user")
     public String newUser(@RequestBody UserForm userForm) {
         User user = userService.addUser(userForm.getUsername(), userForm.getPassword());
