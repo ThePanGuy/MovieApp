@@ -98,6 +98,16 @@ public class Reaction {
     }
 
     @Transient
+    public void addReactionLike(boolean like) {
+        isLike = like;
+    }
+
+    @Transient
+    public void removeReaction() {
+        isLike = null;
+    }
+
+    @Transient
     public void undo() {
         setIsLike(false);
         setIsHate(false);
