@@ -3,7 +3,6 @@ package com.myprojects.demo.controllers;
 import com.myprojects.demo.dto.MovieReactions;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
-import com.myprojects.demo.repositories.MovieRepository;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.services.MovieService;
 import com.myprojects.demo.services.ReactionService;
@@ -20,13 +19,11 @@ public class ReactionController {
     private final ReactionService reactionService;
     private final UserRepository userRepository;
     private final MovieService movieService;
-    private final MovieRepository movieRepository;
 
-    public ReactionController(ReactionService reactionService, UserRepository userRepository, MovieService movieService, MovieRepository movieRepository) {
+    public ReactionController(ReactionService reactionService, UserRepository userRepository, MovieService movieService) {
         this.reactionService = reactionService;
         this.userRepository = userRepository;
         this.movieService = movieService;
-        this.movieRepository = movieRepository;
     }
 
     @GetMapping("/{userId}/likes/{movieId}")
