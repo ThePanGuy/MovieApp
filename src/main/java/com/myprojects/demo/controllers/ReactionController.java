@@ -44,12 +44,4 @@ public class ReactionController {
         Reaction reaction = reactionService.hateOrUnhateMovie(user, movieId);
         return movieService.getMovieReactions(reaction.getMovie());
     }
-
-    @GetMapping("/undo/{userId}/{movieId}")
-    public Reaction undoReaction(@PathVariable Long userId,
-                                 @PathVariable Long movieId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
-        return reactionService.undo(user, movieId);
-    }
 }

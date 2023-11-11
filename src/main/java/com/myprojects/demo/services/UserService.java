@@ -2,7 +2,6 @@ package com.myprojects.demo.services;
 
 import com.myprojects.demo.entities.User;
 import com.myprojects.demo.exceptions.UsernameException;
-import com.myprojects.demo.repositories.MovieRepository;
 import com.myprojects.demo.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +15,9 @@ import java.util.Optional;
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final MovieRepository movieRepository;
-    private final ReactionService reactionService;
 
-    public UserService(UserRepository userRepository, MovieRepository movieRepository, ReactionService reactionService) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.movieRepository = movieRepository;
-        this.reactionService = reactionService;
     }
 
     public List<User> getAllUsers() {

@@ -32,12 +32,6 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<Reaction> reactions = new ArrayList<>();
 
-    @Column
-    private Integer likes;
-
-    @Column
-    private Integer hates;
-
     public Movie() {
     }
 
@@ -93,45 +87,5 @@ public class Movie {
 
     public void setReactions(List<Reaction> reactions) {
         this.reactions = reactions;
-    }
-
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public Integer getHates() {
-        return hates;
-    }
-
-    public void setHates(Integer hates) {
-        this.hates = hates;
-    }
-
-    @Transient
-    public void addLike() {
-        if (likes == null) likes = 0;
-        likes += 1;
-    }
-
-    @Transient
-    public void removeLike() {
-        if (likes == null) return;
-        likes -= 1;
-    }
-
-    @Transient
-    public void addHate() {
-        if (hates == null) hates = 0;
-        hates += 1;
-    }
-
-    @Transient
-    public void removeHate() {
-        if (hates == null) return;
-        hates -= 1;
     }
 }
