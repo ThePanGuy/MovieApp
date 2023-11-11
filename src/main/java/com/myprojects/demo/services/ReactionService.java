@@ -26,30 +26,30 @@ public class ReactionService {
     }
 
     @Transactional
-    public Reaction tryToAddReaction(User user, Movie movie, Reaction.ReactionType reactionType) {
-        switch (reactionType) {
-            case LIKE:
-                return tryToAddOrRemoveLikeReaction(user, movie);
-            case HATE:
-                return tryToAddOrRemoveHateReaction(user, movie);
+    public Reaction likeOrUnlikeMovie(User user, Long movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
+        if (movie.getUploadedBy() == user) {
+            throw new InvalidInputException("You can not rate your own movies.");
         }
-        return null;
+        return addOrUpdateReaction(user, movie, true);
     }
 
-    private Reaction tryToAddOrRemoveLikeReaction(User user, Movie movie) {
-        Optional<Reaction> reaction = reactionRepository.findByUserAndMovie(user, movie);
-        if (reaction.isPresent()) {
-            return updateOrRemoveReaction(reaction.get(), true);
+    @Transactional
+    public Reaction hateOrUnhateMovie(User user, Long movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
+        if (movie.getUploadedBy() == user) {
+            throw new InvalidInputException("You can not rate your own movies.");
         }
-        return addNewReaction(user, movie, true);
+        return addOrUpdateReaction(user, movie, false);
     }
 
-    private Reaction tryToAddOrRemoveHateReaction(User user, Movie movie) {
+    @Transactional
+    public Reaction addOrUpdateReaction(User user, Movie movie, boolean isLike) {
         Optional<Reaction> reaction = reactionRepository.findByUserAndMovie(user, movie);
-        if (reaction.isPresent()) {
-            return updateOrRemoveReaction(reaction.get(), false);
-        }
-        return addNewReaction(user, movie, false);
+        return reaction.map(value -> updateOrRemoveMovieReaction(value, isLike))
+                .orElseGet(() -> addNewReaction(user, movie, isLike));
     }
 
     private Reaction addNewReaction(User user, Movie movie, boolean like) {
@@ -59,32 +59,27 @@ public class ReactionService {
         return reactionRepository.save(newReaction);
     }
 
-    private Reaction updateOrRemoveReaction(Reaction reaction, boolean like) {
-        updateOrRemoveMovieReaction(reaction, like);
-        return reactionRepository.save(reaction);
-    }
 
-
-
-    public Movie updateOrRemoveMovieReaction(Reaction oldReaction, boolean like) {
-        Movie movie = oldReaction.getMovie();
-        if (oldReaction.getIsLike() == null) {
-            addMovieReaction(movie, like);
-            oldReaction.addReactionLike(like);
+    public Reaction updateOrRemoveMovieReaction(Reaction reaction, boolean isLike) {
+        Movie movie = reaction.getMovie();
+        if (reaction.getIsLike() == null) {
+            addMovieReaction(movie, isLike);
+            reaction.addReactionLike(isLike);
             log.info("User with id: {} {} movie with id: {}.",
-                    oldReaction.getUser().getId(), like ? "Likes" : "Hates", movie.getId());
-        } else if (oldReaction.getIsLike() == like) {
-            removeMovieReaction(movie, like);
-            oldReaction.removeReaction();
+                    reaction.getUser().getId(), isLike ? "Likes" : "Hates", movie.getId());
+        } else if (reaction.getIsLike() == isLike) {
+            removeMovieReaction(movie, isLike);
+            reaction.removeReaction();
             log.info("User with id: {} removed {} from movie with id: {}",
-                    oldReaction.getUser().getId(), like ? "Like" : "Hate", movie.getId());
+                    reaction.getUser().getId(), isLike ? "Like" : "Hate", movie.getId());
         } else {
-            changeMovieReaction(movie, like);
-            oldReaction.addReactionLike(like);
+            changeMovieReaction(movie, isLike);
+            reaction.addReactionLike(isLike);
             log.info("User with id: {} changed from {} to {} for movie with id: {}",
-                    oldReaction.getUser().getId(), like ? "Hate" : "Like", like ? "Like" : "Hate", movie.getId());
+                    reaction.getUser().getId(), isLike ? "Hate" : "Like", isLike ? "Like" : "Hate", movie.getId());
         }
-        return movieRepository.save(movie);
+        movieRepository.save(movie);
+        return reactionRepository.save(reaction);
     }
 
     public void addMovieReaction(Movie movie, boolean like) {
