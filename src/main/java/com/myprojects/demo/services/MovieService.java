@@ -2,6 +2,7 @@ package com.myprojects.demo.services;
 
 import com.myprojects.demo.dto.MovieForm;
 import com.myprojects.demo.dto.MovieReactions;
+import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.User;
@@ -26,11 +27,11 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public Page<Movie> findAllMovies(PageRequest pageRequest, User user) {
+    public Page<MovieRecord> findAllMovies(PageRequest pageRequest, User user) {
         if (user == null) {
-            return movieRepository.findAll(pageRequest);
+            return movieRepository.findAllBy(pageRequest);
         }
-        return movieRepository.findAllByUploadedBy(user, pageRequest);
+        return movieRepository.findAllByUploadedByUser(user, pageRequest);
     }
 
     public MovieReactions getMovieReactions(Movie movie) {

@@ -1,6 +1,7 @@
 package com.myprojects.demo.controllers;
 
 import com.myprojects.demo.dto.MovieForm;
+import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.User;
 import com.myprojects.demo.exceptions.InvalidInputException;
@@ -26,7 +27,7 @@ public class MovieController {
     }
 
     @PostMapping("/page")
-    public Page<Movie> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
+    public Page<MovieRecord> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
         Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("creationDate").descending();
         PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
 

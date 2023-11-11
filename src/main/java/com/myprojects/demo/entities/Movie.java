@@ -25,7 +25,7 @@ public class Movie {
     @Column
     private LocalDateTime creationDate;
 
-    @OneToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "uploadedBy")
     private User uploadedBy;
 
