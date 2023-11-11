@@ -11,11 +11,11 @@ public class Reaction {
     @SequenceGenerator(name = "reaction_seq", sequenceName = "reaction_seq", allocationSize = 1)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
@@ -111,6 +111,16 @@ public class Reaction {
     public void undo() {
         setIsLike(false);
         setIsHate(false);
+    }
+
+    @Transient
+    public boolean getIfLike() {
+        return isLike != null && isLike;
+    }
+
+    @Transient
+    public boolean getIfHate() {
+        return isLike != null && !isLike;
     }
 
     public enum ReactionType {
