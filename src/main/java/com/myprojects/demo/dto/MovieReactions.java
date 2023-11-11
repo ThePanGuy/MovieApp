@@ -1,29 +1,27 @@
 package com.myprojects.demo.dto;
 
-import com.myprojects.demo.entities.Movie;
-
 public class MovieReactions {
-    private Integer numberOfLikes;
-    private Integer numberOfHates;
+    private Long numberOfLikes;
+    private Long numberOfHates;
 
-    public MovieReactions(Movie movie) {
-        this.numberOfLikes = movie.getLikes();
-        this.numberOfHates = movie.getHates();
+    public MovieReactions(Long numberOfLikes, Long numberOfHates) {
+        this.numberOfLikes = numberOfLikes;
+        this.numberOfHates = numberOfHates;
     }
 
-    public Integer getNumberOfLikes() {
+    public Long getNumberOfLikes() {
         return numberOfLikes;
     }
 
-    public void setNumberOfLikes(Integer numberOfLikes) {
+    public void setNumberOfLikes(Long numberOfLikes) {
         this.numberOfLikes = numberOfLikes;
     }
 
-    public Integer getNumberOfHates() {
+    public Long getNumberOfHates() {
         return numberOfHates;
     }
 
-    public void setNumberOfHates(Integer numberOfHates) {
+    public void setNumberOfHates(Long numberOfHates) {
         this.numberOfHates = numberOfHates;
     }
 }

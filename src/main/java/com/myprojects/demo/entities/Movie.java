@@ -2,9 +2,11 @@ package com.myprojects.demo.entities;
 
 
 import com.myprojects.demo.dto.MovieForm;
-import javax.persistence.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "movie")
@@ -23,15 +25,12 @@ public class Movie {
     @Column
     private LocalDateTime creationDate;
 
-    @OneToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "uploadedBy")
     private User uploadedBy;
 
-    @Column
-    private Integer likes;
-
-    @Column
-    private Integer hates;
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    private List<Reaction> reactions = new ArrayList<>();
 
     public Movie() {
     }
@@ -82,43 +81,11 @@ public class Movie {
         this.uploadedBy = uploadedBy;
     }
 
-    public Integer getLikes() {
-        return likes;
+    public List<Reaction> getReactions() {
+        return reactions;
     }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public Integer getHates() {
-        return hates;
-    }
-
-    public void setHates(Integer hates) {
-        this.hates = hates;
-    }
-
-    @Transient
-    public void addLike() {
-        if (likes == null) likes = 0;
-        likes += 1;
-    }
-
-    @Transient
-    public void removeLike() {
-        if (likes == null) return;
-        likes -= 1;
-    }
-
-    @Transient
-    public void addHate() {
-        if (hates == null) hates = 0;
-        hates += 1;
-    }
-
-    @Transient
-    public void removeHate() {
-        if (hates == null) return;
-        hates -= 1;
+    public void setReactions(List<Reaction> reactions) {
+        this.reactions = reactions;
     }
 }
