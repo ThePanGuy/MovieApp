@@ -29,7 +29,7 @@ public class UserService {
         MovieUser movieUser = new MovieUser();
         movieUser.setUsername(username);
         movieUser.setPassword(password);
-        Optional<MovieUser> existingUser = userRepository.findUserByUsername(username);
+        Optional<MovieUser> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
             throw new UsernameException("Username: " + username + " already exists.");
         }
