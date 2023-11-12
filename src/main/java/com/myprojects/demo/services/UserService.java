@@ -1,6 +1,6 @@
 package com.myprojects.demo.services;
 
-import com.myprojects.demo.entities.User;
+import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.UsernameException;
 import com.myprojects.demo.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -20,21 +20,21 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
+    public List<MovieUser> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    public User addUser(String username, String password) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        Optional<User> existingUser = userRepository.findUserByUsername(username);
+    public MovieUser addUser(String username, String password) {
+        MovieUser movieUser = new MovieUser();
+        movieUser.setUsername(username);
+        movieUser.setPassword(password);
+        Optional<MovieUser> existingUser = userRepository.findUserByUsername(username);
         if (existingUser.isPresent()) {
             throw new UsernameException("Username: " + username + " already exists.");
         }
-        user = userRepository.save(user);
+        movieUser = userRepository.save(movieUser);
         log.info("New user: {} added.", username);
-        return user;
+        return movieUser;
     }
 }

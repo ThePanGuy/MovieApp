@@ -1,7 +1,7 @@
 package com.myprojects.demo.controllers;
 
 import com.myprojects.demo.dto.UserForm;
-import com.myprojects.demo.entities.User;
+import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +17,13 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public List<User> getAllUsers() {
+    public List<MovieUser> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping("/new-user")
     public String newUser(@RequestBody UserForm userForm) {
-        User user = userService.addUser(userForm.getUsername(), userForm.getPassword());
-        return String.format("New user: %s added", user.getUsername());
+        MovieUser movieUser = userService.addUser(userForm.getUsername(), userForm.getPassword());
+        return String.format("New user: %s added", movieUser.getUsername());
     }
 }

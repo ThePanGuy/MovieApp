@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "movie_user")
-public class User {
+public class MovieUser {
     @Id
     @GeneratedValue(generator = "movie_user_seq")
     @SequenceGenerator(name = "movie_user_seq", sequenceName = "movie_user_seq", allocationSize = 1)
@@ -20,10 +20,10 @@ public class User {
     @JsonIgnore
     private String password;
 
-    public User() {
+    public MovieUser() {
     }
 
-    public User(Long id, String username, String password) {
+    public MovieUser(Long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;

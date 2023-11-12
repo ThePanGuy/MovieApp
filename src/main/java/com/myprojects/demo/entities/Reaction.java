@@ -13,7 +13,7 @@ public class Reaction {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private MovieUser movieUser;
 
     @ManyToOne
     @JoinColumn(name = "movie_id")
@@ -25,13 +25,13 @@ public class Reaction {
     public Reaction() {
     }
 
-    public Reaction(User user, Movie movie) {
-        this.user = user;
+    public Reaction(MovieUser movieUser, Movie movie) {
+        this.movieUser = movieUser;
         this.movie = movie;
     }
 
-    public Reaction(User user, Movie movie, Boolean isLike) {
-        this.user = user;
+    public Reaction(MovieUser movieUser, Movie movie, Boolean isLike) {
+        this.movieUser = movieUser;
         this.movie = movie;
         this.isLike = isLike;
     }
@@ -44,12 +44,12 @@ public class Reaction {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public MovieUser getUser() {
+        return movieUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(MovieUser movieUser) {
+        this.movieUser = movieUser;
     }
 
     public Movie getMovie() {

@@ -3,7 +3,7 @@ package com.myprojects.demo.controllers;
 import com.myprojects.demo.dto.MovieForm;
 import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
-import com.myprojects.demo.entities.User;
+import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.requests.PagingRequest;
@@ -32,17 +32,17 @@ public class MovieController {
         PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
 
         if (pagingRequest.getFilterValue("uploadedBy") != null) {
-            User user = userRepository.findUserByUsername(pagingRequest.getFilterValue("uploadedBy"))
+            MovieUser movieUser = userRepository.findUserByUsername(pagingRequest.getFilterValue("uploadedBy"))
                     .orElseThrow(() -> new InvalidInputException("There is no user with this username"));
-            return movieService.findAllMovies(pageRequest, user);
+            return movieService.findAllMovies(pageRequest, movieUser);
         }
         return movieService.findAllMovies(pageRequest, null);
     }
 
     @PostMapping("/{userId}/add")
     public Movie addMovie(@PathVariable Long userId, @RequestBody MovieForm movieForm) {
-        User user = userRepository.findById(userId)
+        MovieUser movieUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
-        return movieService.addMovie(user, movieForm);
+        return movieService.addMovie(movieUser, movieForm);
     }
 }

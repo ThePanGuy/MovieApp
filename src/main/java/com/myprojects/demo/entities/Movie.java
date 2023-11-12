@@ -25,9 +25,9 @@ public class Movie {
     @Column
     private LocalDateTime creationDate;
 
-    @ManyToOne(targetEntity = User.class)
+    @ManyToOne(targetEntity = MovieUser.class)
     @JoinColumn(name = "uploadedBy")
-    private User uploadedBy;
+    private MovieUser uploadedBy;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
     private List<Reaction> reactions = new ArrayList<>();
@@ -73,11 +73,11 @@ public class Movie {
         this.creationDate = creationDate;
     }
 
-    public User getUploadedBy() {
+    public MovieUser getUploadedBy() {
         return uploadedBy;
     }
 
-    public void setUploadedBy(User uploadedBy) {
+    public void setUploadedBy(MovieUser uploadedBy) {
         this.uploadedBy = uploadedBy;
     }
 
