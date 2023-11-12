@@ -25,10 +25,17 @@ public class UserServiceImpl implements UserService{
         this.roleRepository = roleRepository;
     }
 
+    @Override
     public List<MovieUser> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @Override
+    public MovieUser getUser(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
     public MovieUser addUser(String username, String password) {
         MovieUser movieUser = new MovieUser();
         movieUser.setUsername(username);

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserService {
     List<MovieUser> getAllUsers();
+    MovieUser getUser(String username);
     MovieUser addUser(String username, String password);
     Role saveRole(Role role);
     void addRoleToUser(String username, String roleName);
