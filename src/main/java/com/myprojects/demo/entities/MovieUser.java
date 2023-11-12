@@ -22,6 +22,11 @@ public class MovieUser {
     @JsonIgnore
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "movie_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private List<Role> roles = new ArrayList<>();
 
     public MovieUser() {
