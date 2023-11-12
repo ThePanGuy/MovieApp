@@ -22,7 +22,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
-    private static Logger log = LoggerFactory.getLogger(OncePerRequestFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(OncePerRequestFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
