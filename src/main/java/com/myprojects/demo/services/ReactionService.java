@@ -47,7 +47,7 @@ public class ReactionService {
 
     @Transactional
     public Reaction addOrUpdateReaction(MovieUser movieUser, Movie movie, boolean isLike) {
-        Optional<Reaction> reaction = reactionRepository.findByUserAndMovie(movieUser, movie);
+        Optional<Reaction> reaction = reactionRepository.findByMovieUserAndMovie(movieUser, movie);
         return reaction.map(value -> updateOrRemoveMovieReaction(value, isLike))
                 .orElseGet(() -> addNewReaction(movieUser, movie, isLike));
     }

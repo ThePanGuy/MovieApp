@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
-    public Optional<Reaction> findByUserAndMovie(MovieUser movieUser, Movie movie);
+    public Optional<Reaction> findByMovieUserAndMovie(MovieUser movieUser, Movie movie);
 }

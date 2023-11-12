@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,10 +26,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -58,16 +61,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public MovieUser addUser(String username, String password) {
-        MovieUser movieUser = new MovieUser();
-        movieUser.setUsername(username);
-        movieUser.setPassword(password);
         Optional<MovieUser> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
             throw new UsernameException("Username: " + username + " already exists.");
         }
-        movieUser = userRepository.save(movieUser);
+
+        MovieUser movieUser = new MovieUser();
+        movieUser.setUsername(username);
+        movieUser.setPassword(passwordEncoder.encode(password));
         log.info("New user: {} added.", username);
-        return movieUser;
+        return userRepository.save(movieUser);
     }
 
     @Override
