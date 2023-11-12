@@ -1,15 +1,12 @@
 package com.myprojects.demo.configuration.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myprojects.demo.dto.DecodedData;
+import com.myprojects.demo.utilities.JwtUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,7 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -33,21 +31,14 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
+
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String token = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(token);
-                String username = decodedJWT.getSubject();
-                String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                Arrays.stream(roles).forEach(role -> {
-                    authorities.add(new SimpleGrantedAuthority(role));
-                });
+                String access_token = authorizationHeader.substring("Bearer ".length());
+                DecodedData data = JwtUtilities.tryToDecode(access_token, false);
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                        new UsernamePasswordAuthenticationToken(data.getUsername(), null, data.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
