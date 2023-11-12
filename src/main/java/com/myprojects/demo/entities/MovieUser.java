@@ -4,6 +4,8 @@ package com.myprojects.demo.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "movie_user")
@@ -19,6 +21,8 @@ public class MovieUser {
     @Column
     @JsonIgnore
     private String password;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles = new ArrayList<>();
 
     public MovieUser() {
     }
@@ -51,5 +55,13 @@ public class MovieUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
