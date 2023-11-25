@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<MovieUser> saveUser(@RequestBody MovieUser user) {
+    public ResponseEntity<MovieUser> saveUser(@RequestBody UserForm user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.addUser(user.getUsername(), user.getPassword()));
     }

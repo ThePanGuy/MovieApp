@@ -43,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .sessionManagement().sessionCreationPolicy(STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/login/**", "/user/token/refresh/**").permitAll()
+                .antMatchers("/login/**", "/user/token/refresh/**", "/user/save/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/user/**").hasAnyAuthority("ROLE_USER")
                 .antMatchers(HttpMethod.GET, "/user/new-user/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated().and()
