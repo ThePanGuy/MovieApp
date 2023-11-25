@@ -27,7 +27,7 @@ import java.util.Map;
 import static com.myprojects.demo.utilities.JwtUtilities.*;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private static Logger log = LoggerFactory.getLogger(CustomAuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomAuthenticationFilter.class);
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,7 +45,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             log.info("Password is: {}", userForm.getPassword());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userForm.getUsername(), userForm.getPassword());
             return authenticationManager.authenticate(authenticationToken);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Not correct format");
         }
     }
