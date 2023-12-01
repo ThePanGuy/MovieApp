@@ -1,56 +1,25 @@
 package com.myprojects.demo.services;
 
-import com.myprojects.demo.dto.MovieForm;
-import com.myprojects.demo.dto.MovieReactions;
-import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
-import com.myprojects.demo.entities.Reaction;
-import com.myprojects.demo.entities.User;
-import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.myprojects.demo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieService {
-    private static final Logger log = LoggerFactory.getLogger(MovieService.class);
     private final MovieRepository movieRepository;
+    private final UserRepository userRepository;
 
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, UserRepository userRepository) {
         this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
     }
 
-    public Page<MovieRecord> findAllMovies(PageRequest pageRequest, User user) {
-        if (user == null) {
-            return movieRepository.findAllBy(pageRequest);
-        }
-        return movieRepository.findAllByUploadedByUser(user, pageRequest);
+    public List<Movie> findAllMovies() {
+        return movieRepository.findAll();
     }
 
-    public MovieReactions getMovieReactions(Movie movie) {
-        List<Reaction> reactions = movie.getReactions();
-        Long numberOfLikes = reactions.stream().filter(Reaction::getIfLike).count();
-        Long numberOfHates = reactions.stream().filter(Reaction::getIfHate).count();
-        return new MovieReactions(numberOfLikes, numberOfHates);
-    }
 
-    @Transactional
-    public Movie addMovie(User user, MovieForm movieForm) {
-        Optional<Movie> movie = movieRepository.findByTitle(movieForm.getTitle());
-        if (movie.isPresent()) {
-            throw new InvalidInputException("Movie with title: " + movieForm.getTitle() + " already exists.");
-        }
-        Movie newMovie = new Movie(movieForm);
-        newMovie.setUploadedBy(user);
-        newMovie = movieRepository.save(newMovie);
-        log.info("User with id: {} added movie with title: {}", user.getId(), newMovie.getTitle());
-        return newMovie;
-    }
 }

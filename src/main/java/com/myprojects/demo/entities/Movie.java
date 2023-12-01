@@ -2,11 +2,9 @@ package com.myprojects.demo.entities;
 
 
 import com.myprojects.demo.dto.MovieForm;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "movie")
@@ -25,12 +23,15 @@ public class Movie {
     @Column
     private LocalDateTime creationDate;
 
-    @ManyToOne(targetEntity = User.class)
+    @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "uploadedBy")
     private User uploadedBy;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-    private List<Reaction> reactions = new ArrayList<>();
+    @Column
+    private Integer likes;
+
+    @Column
+    private Integer hates;
 
     public Movie() {
     }
@@ -81,11 +82,24 @@ public class Movie {
         this.uploadedBy = uploadedBy;
     }
 
-    public List<Reaction> getReactions() {
-        return reactions;
+    public Integer getLikes() {
+        return likes;
     }
 
-    public void setReactions(List<Reaction> reactions) {
-        this.reactions = reactions;
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public Integer getHates() {
+        return hates;
+    }
+
+    public void setHates(Integer hates) {
+        this.hates = hates;
+    }
+
+    @Transient
+    public void addLike() {
+        this.likes += 1;
     }
 }
