@@ -1,8 +1,8 @@
 package com.myprojects.demo.services;
 
 import com.myprojects.demo.entities.Movie;
+import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Reaction;
-import com.myprojects.demo.entities.User;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
 import com.myprojects.demo.repositories.ReactionRepository;
@@ -26,34 +26,34 @@ public class ReactionService {
     }
 
     @Transactional
-    public Reaction likeOrUnlikeMovie(User user, Long movieId) {
+    public Reaction likeOrUnlikeMovie(MovieUser movieUser, Long movieId) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
-        if (movie.getUploadedBy() == user) {
+        if (movie.getUploadedBy() == movieUser) {
             throw new InvalidInputException("You can not rate your own movies.");
         }
-        return addOrUpdateReaction(user, movie, true);
+        return addOrUpdateReaction(movieUser, movie, true);
     }
 
     @Transactional
-    public Reaction hateOrUnhateMovie(User user, Long movieId) {
+    public Reaction hateOrUnhateMovie(MovieUser movieUser, Long movieId) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
-        if (movie.getUploadedBy() == user) {
+        if (movie.getUploadedBy() == movieUser) {
             throw new InvalidInputException("You can not rate your own movies.");
         }
-        return addOrUpdateReaction(user, movie, false);
+        return addOrUpdateReaction(movieUser, movie, false);
     }
 
     @Transactional
-    public Reaction addOrUpdateReaction(User user, Movie movie, boolean isLike) {
-        Optional<Reaction> reaction = reactionRepository.findByUserAndMovie(user, movie);
+    public Reaction addOrUpdateReaction(MovieUser movieUser, Movie movie, boolean isLike) {
+        Optional<Reaction> reaction = reactionRepository.findByMovieUserAndMovie(movieUser, movie);
         return reaction.map(value -> updateOrRemoveMovieReaction(value, isLike))
-                .orElseGet(() -> addNewReaction(user, movie, isLike));
+                .orElseGet(() -> addNewReaction(movieUser, movie, isLike));
     }
 
-    private Reaction addNewReaction(User user, Movie movie, boolean like) {
-        Reaction newReaction = new Reaction(user, movie, like);
+    private Reaction addNewReaction(MovieUser movieUser, Movie movie, boolean like) {
+        Reaction newReaction = new Reaction(movieUser, movie, like);
         return reactionRepository.save(newReaction);
     }
 

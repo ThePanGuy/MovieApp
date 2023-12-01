@@ -1,8 +1,8 @@
 package com.myprojects.demo.controllers;
 
 import com.myprojects.demo.dto.MovieReactions;
+import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Reaction;
-import com.myprojects.demo.entities.User;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.services.MovieService;
 import com.myprojects.demo.services.ReactionService;
@@ -28,17 +28,17 @@ public class ReactionController {
 
     @GetMapping("/{userId}/likes/{movieId}")
     public MovieReactions likeMovie(@PathVariable Long userId, @PathVariable Long movieId) {
-        User user = userRepository.findById(userId)
+        MovieUser movieUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
-        Reaction reaction = reactionService.likeOrUnlikeMovie(user, movieId);
+        Reaction reaction = reactionService.likeOrUnlikeMovie(movieUser, movieId);
         return movieService.getMovieReactions(reaction.getMovie());
     }
 
     @GetMapping("/{userId}/hates/{movieId}")
     public MovieReactions hateMovie(@PathVariable Long userId, @PathVariable Long movieId) {
-        User user = userRepository.findById(userId)
+        MovieUser movieUser = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
-        Reaction reaction = reactionService.hateOrUnhateMovie(user, movieId);
+        Reaction reaction = reactionService.hateOrUnhateMovie(movieUser, movieId);
         return movieService.getMovieReactions(reaction.getMovie());
     }
 }

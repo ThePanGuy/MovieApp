@@ -5,7 +5,7 @@ import com.myprojects.demo.dto.MovieReactions;
 import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.Reaction;
-import com.myprojects.demo.entities.User;
+import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
 import org.slf4j.Logger;
@@ -27,11 +27,11 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public Page<MovieRecord> findAllMovies(PageRequest pageRequest, User user) {
-        if (user == null) {
+    public Page<MovieRecord> findAllMovies(PageRequest pageRequest, MovieUser movieUser) {
+        if (movieUser == null) {
             return movieRepository.findAllBy(pageRequest);
         }
-        return movieRepository.findAllByUploadedByUser(user, pageRequest);
+        return movieRepository.findAllByUploadedByUser(movieUser, pageRequest);
     }
 
     public MovieReactions getMovieReactions(Movie movie) {
@@ -42,15 +42,15 @@ public class MovieService {
     }
 
     @Transactional
-    public Movie addMovie(User user, MovieForm movieForm) {
+    public Movie addMovie(MovieUser movieUser, MovieForm movieForm) {
         Optional<Movie> movie = movieRepository.findByTitle(movieForm.getTitle());
         if (movie.isPresent()) {
             throw new InvalidInputException("Movie with title: " + movieForm.getTitle() + " already exists.");
         }
         Movie newMovie = new Movie(movieForm);
-        newMovie.setUploadedBy(user);
+        newMovie.setUploadedBy(movieUser);
         newMovie = movieRepository.save(newMovie);
-        log.info("User with id: {} added movie with title: {}", user.getId(), newMovie.getTitle());
+        log.info("User with id: {} added movie with title: {}", movieUser.getId(), newMovie.getTitle());
         return newMovie;
     }
 }
