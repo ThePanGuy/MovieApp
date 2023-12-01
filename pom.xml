@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Movie-App</name>
-	<description>Demo App</description>
+	<description>A Movie Application</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
