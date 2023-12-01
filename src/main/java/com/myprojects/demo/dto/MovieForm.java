@@ -3,7 +3,6 @@ package com.myprojects.demo.dto;
 public class MovieForm {
     private String title;
     private String description;
-    private Boolean reaction;
 
     public MovieForm() {
     }
@@ -22,13 +21,5 @@ public class MovieForm {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Boolean getReaction() {
-        return reaction;
-    }
-
-    public void setReaction(Boolean reaction) {
-        this.reaction = reaction;
     }
 }

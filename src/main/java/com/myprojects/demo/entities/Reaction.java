@@ -1,7 +1,7 @@
 package com.myprojects.demo.entities;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "reaction")
@@ -11,19 +11,16 @@ public class Reaction {
     @SequenceGenerator(name = "reaction_seq", sequenceName = "reaction_seq", allocationSize = 1)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @Column
     private Boolean isLike;
-
-    @Column
-    private Boolean isHate;
 
     public Reaction() {
     }
@@ -32,6 +29,13 @@ public class Reaction {
         this.user = user;
         this.movie = movie;
     }
+
+    public Reaction(User user, Movie movie, Boolean isLike) {
+        this.user = user;
+        this.movie = movie;
+        this.isLike = isLike;
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,23 +68,13 @@ public class Reaction {
         this.isLike = isLike;
     }
 
-    public Boolean getIsHate() {
-        return isHate;
-    }
-
-    public void setIsHate(Boolean isHate) {
-        this.isHate = isHate;
+    @Transient
+    public boolean getIfLike() {
+        return isLike != null && isLike;
     }
 
     @Transient
-    public void undo() {
-        setIsLike(false);
-        setIsHate(false);
+    public boolean getIfHate() {
+        return isLike != null && !isLike;
     }
-
-    public enum ReactionType {
-        LIKE,
-        HATE
-    }
-
 }

@@ -1,7 +1,9 @@
 package com.myprojects.demo.entities;
 
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "movie_user")
@@ -15,6 +17,7 @@ public class User {
     private String username;
 
     @Column
+    @JsonIgnore
     private String password;
 
     public User() {
