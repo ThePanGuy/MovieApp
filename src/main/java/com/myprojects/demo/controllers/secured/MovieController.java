@@ -1,23 +1,23 @@
-package com.myprojects.demo.controllers;
+package com.myprojects.demo.controllers.secured;
 
 import com.myprojects.demo.dto.MovieForm;
-import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.requests.PagingRequest;
 import com.myprojects.demo.services.MovieService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 
-@RestController
-@RequestMapping("/movie")
+@RestController()
+@RequestMapping("/secured/movie")
 public class MovieController {
+
     private final UserRepository userRepository;
     private final MovieService movieService;
 
@@ -27,7 +27,7 @@ public class MovieController {
     }
 
     @PostMapping("/page")
-    public Page<MovieRecord> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
+    public Object getMoviePage(@AuthenticationPrincipal MovieUser user, @RequestBody PagingRequest pagingRequest) {
         Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("creationDate").descending();
         PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
 

@@ -1,4 +1,4 @@
-package com.myprojects.demo.controllers;
+package com.myprojects.demo.controllers.secured;
 
 import com.myprojects.demo.dto.MovieReactions;
 import com.myprojects.demo.entities.MovieUser;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("/reaction")
+@RequestMapping("secured/reaction")
 public class ReactionController {
     private final ReactionService reactionService;
     private final UserRepository userRepository;

@@ -2,11 +2,18 @@ package com.myprojects.demo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myprojects.demo.dto.DecodedData;
-import com.myprojects.demo.dto.RoleToUserForm;
+import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.dto.UserForm;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Role;
+import com.myprojects.demo.exceptions.InvalidInputException;
+import com.myprojects.demo.repositories.UserRepository;
+import com.myprojects.demo.requests.PagingRequest;
+import com.myprojects.demo.services.MovieService;
 import com.myprojects.demo.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,42 +32,40 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/home")
+public class HomeController {
+
+    private final UserRepository userRepository;
+    private final MovieService movieService;
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public HomeController(UserRepository userRepository, MovieService movieService, UserService userService) {
+        this.userRepository = userRepository;
+        this.movieService = movieService;
         this.userService = userService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<MovieUser>> getAllUsers() {
-        return ResponseEntity.ok().body(userService.getAllUsers());
+    @PostMapping("/movies")
+    public Page<MovieRecord> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
+        Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("creationDate").descending();
+        PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
+
+        if (pagingRequest.getFilterValue("uploadedBy") != null) {
+            MovieUser movieUser = userRepository.findByUsername(pagingRequest.getFilterValue("uploadedBy"))
+                    .orElseThrow(() -> new InvalidInputException("There is no user with this username"));
+            return movieService.findAllMovies(pageRequest, movieUser);
+        }
+        return movieService.findAllMovies(pageRequest, null);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<MovieUser> saveUser(@RequestBody UserForm user) {
+
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<MovieUser> signUp(@RequestBody UserForm user) {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.addUser(user.getUsername(), user.getPassword()));
     }
 
-    @PostMapping("/role/save")
-    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(role));
-    }
-
-    @PostMapping("/role/addToUser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form) {
-        userService.addRoleToUser(form.getUsername(), form.getRoleName());
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/new-user")
-    public String newUser(@RequestBody UserForm userForm) {
-        MovieUser movieUser = userService.addUser(userForm.getUsername(), userForm.getPassword());
-        return String.format("New user: %s added", movieUser.getUsername());
-    }
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -88,4 +93,5 @@ public class UserController {
         }
 
     }
+
 }
