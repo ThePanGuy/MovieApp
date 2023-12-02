@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -23,6 +26,12 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(OncePerRequestFilter.class);
+
+    private final UserDetailsService userDetailsService;
+
+    public CustomAuthorizationFilter(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -40,9 +49,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             try {
                 String access_token = authorizationHeader.substring("Bearer ".length());
                 DecodedData data = JwtUtilities.tryToDecode(access_token, false);
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(data.getUsername(), null, data.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UserDetails user = userDetailsService.loadUserByUsername(data.getUsername());
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
                 filterChain.doFilter(request, response);
             } catch (Exception e) {
                 log.error("Error logging in: {}", e.getMessage());

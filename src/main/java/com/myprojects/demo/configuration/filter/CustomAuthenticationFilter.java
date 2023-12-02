@@ -1,6 +1,5 @@
 package com.myprojects.demo.configuration.filter;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myprojects.demo.dto.UserForm;
 import org.slf4j.Logger;
@@ -11,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -52,13 +51,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        User user = (User) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        UserDetails user = (UserDetails) authentication.getPrincipal();
         List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         String access_token = createAccessToken(user.getUsername(), authorities, request.getRequestURL().toString());
         String refresh_token = createRefreshToken(user, request.getRequestURL().toString());
-        /*response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);*/
         Map<String, String> tokens = generateTokensMap(access_token, refresh_token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);

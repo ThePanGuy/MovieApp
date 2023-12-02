@@ -1,4 +1,4 @@
-package com.myprojects.demo.configuration;//package com.myprojects.demo.configuration;
+package com.myprojects.demo.configuration.security;
 
 import com.myprojects.demo.configuration.filter.CustomAuthenticationFilter;
 import com.myprojects.demo.configuration.filter.CustomAuthorizationFilter;
@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/user/new-user/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilter(new CustomAuthenticationFilter(authenticationManagerBean()))
-                .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomAuthorizationFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler());
