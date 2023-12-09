@@ -42,7 +42,7 @@ public class MovieService {
     }
 
     @Transactional
-    public Movie addMovie(MovieUser movieUser, MovieForm movieForm) {
+    public MovieRecord addMovie(MovieUser movieUser, MovieForm movieForm) {
         Optional<Movie> movie = movieRepository.findByTitle(movieForm.getTitle());
         if (movie.isPresent()) {
             throw new InvalidInputException("Movie with title: " + movieForm.getTitle() + " already exists.");
@@ -51,6 +51,6 @@ public class MovieService {
         newMovie.setUploadedBy(movieUser);
         newMovie = movieRepository.save(newMovie);
         log.info("User with id: {} added movie with title: {}", movieUser.getId(), newMovie.getTitle());
-        return newMovie;
+        return new MovieRecord(newMovie);
     }
 }

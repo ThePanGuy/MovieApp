@@ -1,7 +1,7 @@
 package com.myprojects.demo.controllers.secured;
 
 import com.myprojects.demo.dto.MovieForm;
-import com.myprojects.demo.entities.Movie;
+import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.UserRepository;
@@ -10,9 +10,10 @@ import com.myprojects.demo.services.MovieService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import javax.persistence.EntityNotFoundException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping("/secured/movie")
@@ -39,10 +40,8 @@ public class MovieController {
         return movieService.findAllMovies(pageRequest, null);
     }
 
-    @PostMapping("/{userId}/add")
-    public Movie addMovie(@PathVariable Long userId, @RequestBody MovieForm movieForm) {
-        MovieUser movieUser = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User doesn't exist"));
-        return movieService.addMovie(movieUser, movieForm);
+    @PostMapping("/add")
+    public MovieRecord addMovie(@AuthenticationPrincipal MovieUser user, @RequestBody MovieForm movieForm) {
+        return movieService.addMovie(user, movieForm);
     }
 }
