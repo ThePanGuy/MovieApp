@@ -36,4 +36,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 request);
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    protected ResponseEntity<Object> handleExceptions(Exception ex, WebRequest request) {
+        log.error("Exception for request:{} message is:{}", request, ex.getMessage(), ex);
+        return handleExceptionInternal(ex,
+                new ExceptionResponse(
+                        "There is an issue connecting to the services. Please refresh."),
+                new HttpHeaders(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                request);
+    }
 }
