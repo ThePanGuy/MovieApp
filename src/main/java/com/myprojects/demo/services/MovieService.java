@@ -1,10 +1,8 @@
 package com.myprojects.demo.services;
 
 import com.myprojects.demo.dto.MovieForm;
-import com.myprojects.demo.dto.MovieReactions;
 import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.entities.Movie;
-import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,13 +29,6 @@ public class MovieService {
             return movieRepository.findAllBy(pageRequest);
         }
         return movieRepository.findAllByUploadedByUser(movieUser, pageRequest);
-    }
-
-    public MovieReactions getMovieReactions(Movie movie) {
-        List<Reaction> reactions = movie.getReactions();
-        Long numberOfLikes = reactions.stream().filter(Reaction::getIfLike).count();
-        Long numberOfHates = reactions.stream().filter(Reaction::getIfHate).count();
-        return new MovieReactions(numberOfLikes, numberOfHates);
     }
 
     @Transactional

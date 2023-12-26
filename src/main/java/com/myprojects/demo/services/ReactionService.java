@@ -1,5 +1,6 @@
 package com.myprojects.demo.services;
 
+import com.myprojects.demo.dto.MovieReactions;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Reaction;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -73,5 +75,12 @@ public class ReactionService {
                     reaction.getUser().getId(), isLike ? "Hate" : "Like", isLike ? "Like" : "Hate", reaction.getMovie().getId());
         }
         return reactionRepository.save(reaction);
+    }
+
+    public MovieReactions getReactions(Movie movie) {
+        List<Reaction> reactions = movie.getReactions();
+        Long numberOfLikes = reactions.stream().filter(Reaction::getIfLike).count();
+        Long numberOfHates = reactions.stream().filter(Reaction::getIfHate).count();
+        return new MovieReactions(numberOfLikes, numberOfHates);
     }
 }
