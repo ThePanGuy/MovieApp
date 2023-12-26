@@ -22,8 +22,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<MovieRecord> findAllBy(Pageable pageable);
 
 
-    @Query("select m.id, m.title, m.description, m.creationDate, m.uploadedBy," +
-           " sum(case when r.isLike = true then 1 else 0 end), sum(case when r.isLike = false then 1 else 0 end) " +
+    @Query("select new com.myprojects.demo.dto.MovieRecord(m.id, m.title, m.description, m.creationDate, m.uploadedBy," +
+           " sum(case when r.isLike = true then 1 else 0 end), sum(case when r.isLike = false then 1 else 0 end)) " +
            "from Movie m left join m.reactions r where m.uploadedBy = :user group by m.id, m.title, m.description, m.creationDate, m.uploadedBy")
     Page<MovieRecord> findAllByUploadedByUser(@Param("user") MovieUser movieUser, Pageable pageable);
 }

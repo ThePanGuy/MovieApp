@@ -33,8 +33,9 @@ public class MovieController {
         PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
 
         if (pagingRequest.getFilterValue("uploadedBy") != null) {
-            MovieUser movieUser = userRepository.findByUsername(pagingRequest.getFilterValue("uploadedBy"))
-                    .orElseThrow(() -> new InvalidInputException("There is no user with this username"));
+            Long userId = Long.parseLong(pagingRequest.getFilterValue("uploadedBy"));
+            MovieUser movieUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new InvalidInputException("There is no user with this id"));
             return movieService.findAllMovies(pageRequest, movieUser);
         }
         return movieService.findAllMovies(pageRequest, null);
