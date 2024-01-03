@@ -28,7 +28,8 @@ public class MovieService {
         if (movieUser == null) {
             return movieRepository.findAllBy(pageRequest);
         }
-        return movieRepository.findAllByUploadedByUser(movieUser, pageRequest);
+        return movieRepository.findAllByUploadedBy(movieUser, pageRequest)
+                .map(MovieRecord::new);
     }
 
     @Transactional

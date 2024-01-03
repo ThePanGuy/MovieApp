@@ -26,4 +26,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
            " sum(case when r.isLike = true then 1 else 0 end), sum(case when r.isLike = false then 1 else 0 end)) " +
            "from Movie m left join m.reactions r where m.uploadedBy = :user group by m.id, m.title, m.description, m.creationDate, m.uploadedBy")
     Page<MovieRecord> findAllByUploadedByUser(@Param("user") MovieUser movieUser, Pageable pageable);
+
+
+    Page<Movie> findAllByUploadedBy(MovieUser uploadedBy, Pageable pageable);
 }
