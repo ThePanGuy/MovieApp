@@ -6,10 +6,13 @@ import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
 import com.myprojects.demo.repositories.MovieRepository;
+import com.myprojects.demo.repositories.UserRepository;
+import com.myprojects.demo.requests.PagingRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,15 +22,27 @@ import java.util.Optional;
 public class MovieService {
     private static final Logger log = LoggerFactory.getLogger(MovieService.class);
     private final MovieRepository movieRepository;
+    private final UserRepository userRepository;
 
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, UserRepository userRepository) {
         this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
     }
 
-    public Page<MovieRecord> findAllMovies(PageRequest pageRequest, MovieUser movieUser) {
+    public Page<MovieRecord> findMovies(PagingRequest pagingRequest) {
+        Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("creationDate").descending();
+        PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
+
+        MovieUser movieUser = null;
+        if (pagingRequest.getFilterValue("uploadedBy") != null) {
+            movieUser = userRepository.findByUsername(pagingRequest.getFilterValue("uploadedBy"))
+                    .orElseThrow(() -> new InvalidInputException("There is no user with this username"));
+        }
+
         if (movieUser == null) {
             return movieRepository.findAllBy(pageRequest);
         }
+
         return movieRepository.findAllByUploadedBy(movieUser, pageRequest)
                 .map(MovieRecord::new);
     }
