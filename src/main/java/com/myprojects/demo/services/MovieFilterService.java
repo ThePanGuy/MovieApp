@@ -87,7 +87,7 @@ public class MovieFilterService {
             return new MovieResult(Collections.emptyList(), rowCount);
         }
 
-        return new MovieResult(movies, 0L);
+        return new MovieResult(movies, rowCount);
 
     }
 
