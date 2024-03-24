@@ -1,6 +1,6 @@
 package com.myprojects.demo.services;
 
-import com.myprojects.demo.dto.MovieReactions;
+import com.myprojects.demo.dto.movie.MovieReactions;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Reaction;
@@ -65,7 +65,7 @@ public class ReactionService {
             reaction.setIsLike(isLike);
             log.info("User with id: {} {} movie with id: {}.",
                     reaction.getUser().getId(), isLike ? "Likes" : "Hates", reaction.getMovie().getId());
-        } else if (reaction.getIsLike() == isLike) {
+        } else if (Boolean.TRUE.equals(reaction.getIsLike()) == isLike) {
             reaction.setIsLike(null);
             log.info("User with id: {} removed {} from movie with id: {}",
                     reaction.getUser().getId(), isLike ? "Like" : "Hate", reaction.getMovie().getId());

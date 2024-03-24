@@ -1,4 +1,4 @@
-package com.myprojects.demo.dto;
+package com.myprojects.demo.dto.movie;
 
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;

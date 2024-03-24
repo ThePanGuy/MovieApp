@@ -2,11 +2,10 @@ package com.myprojects.demo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myprojects.demo.dto.DecodedData;
-import com.myprojects.demo.dto.MovieRecord;
 import com.myprojects.demo.dto.UserForm;
+import com.myprojects.demo.dto.movie.MovieTableItem;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Role;
-import com.myprojects.demo.repositories.UserRepository;
 import com.myprojects.demo.requests.PagingRequest;
 import com.myprojects.demo.services.MovieService;
 import com.myprojects.demo.services.UserService;
@@ -32,18 +31,16 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @RequestMapping("/home")
 public class HomeController {
 
-    private final UserRepository userRepository;
     private final MovieService movieService;
     private final UserService userService;
 
-    public HomeController(UserRepository userRepository, MovieService movieService, UserService userService) {
-        this.userRepository = userRepository;
+    public HomeController(MovieService movieService, UserService userService) {
         this.movieService = movieService;
         this.userService = userService;
     }
 
     @PostMapping("/movies")
-    public Page<MovieRecord> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
+    public Page<MovieTableItem> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
         return movieService.findMovies(pagingRequest);
     }
 
@@ -61,12 +58,12 @@ public class HomeController {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String refresh_token = authorizationHeader.substring("Bearer ".length());
-                DecodedData data = tryToDecode(refresh_token, true);
+                String refreshToken = authorizationHeader.substring("Bearer ".length());
+                DecodedData data = tryToDecode(refreshToken, true);
                 MovieUser user = userService.getUser(data.getUsername());
                 List<String> authorities = user.getRoles().stream().map(Role::getName).toList();
-                String access_token = createAccessToken(user.getUsername(), authorities, request.getRequestURL().toString());
-                Map<String, String> tokens = generateTokensMap(access_token, refresh_token);
+                String accessToken = createAccessToken(user.getUsername(), authorities, request.getRequestURL().toString());
+                Map<String, String> tokens = generateTokensMap(accessToken, refreshToken);
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tokens);
             } catch (Exception e) {
@@ -78,7 +75,7 @@ public class HomeController {
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            throw new IllegalArgumentException("Refresh token is missing");
         }
 
     }

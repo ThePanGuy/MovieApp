@@ -1,7 +1,9 @@
 package com.myprojects.demo.services;
 
-import com.myprojects.demo.dto.MovieForm;
-import com.myprojects.demo.dto.MovieRecord;
+import com.myprojects.demo.dto.movie.MovieFilter;
+import com.myprojects.demo.dto.movie.MovieForm;
+import com.myprojects.demo.dto.movie.MovieRecord;
+import com.myprojects.demo.dto.movie.MovieTableItem;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
@@ -23,15 +25,19 @@ public class MovieService {
     private static final Logger log = LoggerFactory.getLogger(MovieService.class);
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
+    private final MovieFilterService movieFilterService;
 
-    public MovieService(MovieRepository movieRepository, UserRepository userRepository) {
+    public MovieService(MovieRepository movieRepository, UserRepository userRepository,
+                        MovieFilterService movieFilterService) {
         this.movieRepository = movieRepository;
         this.userRepository = userRepository;
+        this.movieFilterService = movieFilterService;
     }
 
-    public Page<MovieRecord> findMovies(PagingRequest pagingRequest) {
-        Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("creationDate").descending();
+    public Page<MovieTableItem> findMovies(PagingRequest pagingRequest) {
+        Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("likes").descending();
         PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
+
 
         MovieUser movieUser = null;
         if (pagingRequest.getFilterValue("uploadedBy") != null) {
@@ -39,12 +45,13 @@ public class MovieService {
                     .orElseThrow(() -> new InvalidInputException("There is no user with this username"));
         }
 
-        if (movieUser == null) {
-            return movieRepository.findAllBy(pageRequest);
-        }
 
-        return movieRepository.findAllByUploadedBy(movieUser, pageRequest)
-                .map(MovieRecord::new);
+        MovieFilter filter = new MovieFilter.Builder()
+                .setMovieUser(movieUser)
+                .setSort(sort)
+                .setPageRequest(pageRequest).build();
+
+        return movieFilterService.filter(filter);
     }
 
     @Transactional

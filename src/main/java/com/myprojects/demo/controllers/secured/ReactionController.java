@@ -1,6 +1,6 @@
 package com.myprojects.demo.controllers.secured;
 
-import com.myprojects.demo.dto.MovieReactions;
+import com.myprojects.demo.dto.movie.MovieReactions;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.services.ReactionService;

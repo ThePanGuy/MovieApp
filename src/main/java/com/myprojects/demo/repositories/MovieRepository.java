@@ -1,6 +1,6 @@
 package com.myprojects.demo.repositories;
 
-import com.myprojects.demo.dto.MovieRecord;
+import com.myprojects.demo.dto.movie.MovieRecord;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Optional<Movie> findByTitle(String title);
 
     @Query("""
-              select new com.myprojects.demo.dto.MovieRecord(m.id, m.title, m.description, m.creationDate,m.uploadedBy,sum(case when r.isLike = true then 1 else 0 end),sum(case when r.isLike = false then 1 else 0 end))\s
+              select new com.myprojects.demo.dto.movie.MovieRecord(m.id, m.title, m.description, m.creationDate,m.uploadedBy,sum(case when r.isLike = true then 1 else 0 end),sum(case when r.isLike = false then 1 else 0 end))\s
               from Movie m\s
               left join Reaction r on m.id = r.movie.id\s
               group by m.id, m.title, m.description, m.creationDate, m.uploadedBy""")
@@ -23,7 +23,7 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
 
     //todo: try to make this query work for efficiency
-    @Query("select new com.myprojects.demo.dto.MovieRecord(m.id, m.title, m.description, m.creationDate, m.uploadedBy," +
+    @Query("select new com.myprojects.demo.dto.movie.MovieRecord(m.id, m.title, m.description, m.creationDate, m.uploadedBy," +
            " sum(case when r.isLike = true then 1 else 0 end), sum(case when r.isLike = false then 1 else 0 end)) " +
            "from Movie m left join m.reactions r where m.uploadedBy = :user group by m.id, m.title, m.description, m.creationDate, m.uploadedBy")
     Page<MovieRecord> findAllByUploadedByUser(@Param("user") MovieUser movieUser, Pageable pageable);

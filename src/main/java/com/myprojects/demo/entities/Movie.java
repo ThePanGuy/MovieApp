@@ -1,7 +1,7 @@
 package com.myprojects.demo.entities;
 
 
-import com.myprojects.demo.dto.MovieForm;
+import com.myprojects.demo.dto.movie.MovieForm;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

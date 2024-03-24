@@ -1,11 +1,8 @@
-package com.myprojects.demo.dto;
+package com.myprojects.demo.dto.movie;
 
 public class MovieForm {
     private String title;
     private String description;
-
-    public MovieForm() {
-    }
 
     public String getTitle() {
         return title;

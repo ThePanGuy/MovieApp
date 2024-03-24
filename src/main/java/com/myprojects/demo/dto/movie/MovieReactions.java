@@ -1,4 +1,4 @@
-package com.myprojects.demo.dto;
+package com.myprojects.demo.dto.movie;
 
 public class MovieReactions {
     private Long numberOfLikes;
