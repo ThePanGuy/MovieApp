@@ -2,7 +2,7 @@ package com.myprojects.demo.dto.movie;
 
 import java.time.LocalDateTime;
 
-public class MovieTableItem {
+public class MoviePage {
     private Long id;
     private String title;
     private String description;

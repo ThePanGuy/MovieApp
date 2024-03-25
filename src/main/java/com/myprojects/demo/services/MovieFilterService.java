@@ -1,7 +1,7 @@
 package com.myprojects.demo.services;
 
 import com.myprojects.demo.dto.movie.MovieFilter;
-import com.myprojects.demo.dto.movie.MovieTableItem;
+import com.myprojects.demo.dto.movie.MoviePage;
 import com.myprojects.demo.utilities.PaginationUtils;
 import com.myprojects.demo.utilities.StringUtilities;
 import org.mvel2.templates.TemplateRuntime;
@@ -35,7 +35,7 @@ public class MovieFilterService {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Page<MovieTableItem> filter(MovieFilter movieFilter) {
+    public Page<MoviePage> filter(MovieFilter movieFilter) {
         MovieResult result = find(movieFilter);
         return new PageImpl<>(result.getMovies(), movieFilter.getPageRequest(), result.getRowCount());
     }
@@ -59,17 +59,17 @@ public class MovieFilterService {
         String backUpQuery = queryBuilder.toString();
         paginate(filter.getPageRequest(), queryBuilder);
 
-        List<MovieTableItem> movies = namedParameterJdbcTemplate.query(queryBuilder.toString(),
+        List<MoviePage> movies = namedParameterJdbcTemplate.query(queryBuilder.toString(),
                 queryParams,
-                new BeanPropertyRowMapper<>(MovieTableItem.class));
+                new BeanPropertyRowMapper<>(MoviePage.class));
 
         if (movies.isEmpty()) {
             if (filter.getPageRequest().getPageNumber() > 0) {
                 StringBuilder checkQueryBuilder = new StringBuilder(backUpQuery);
                 paginateForEmpty(filter.getPageRequest(), checkQueryBuilder);
-                List<MovieTableItem> tempMovies = namedParameterJdbcTemplate.query(checkQueryBuilder.toString(),
+                List<MoviePage> tempMovies = namedParameterJdbcTemplate.query(checkQueryBuilder.toString(),
                         queryParams,
-                        new BeanPropertyRowMapper<>(MovieTableItem.class));
+                        new BeanPropertyRowMapper<>(MoviePage.class));
 
                 if (!tempMovies.isEmpty()) {
                     return new MovieResult(Collections.emptyList(), tempMovies.get(0).getRowCount());
@@ -125,15 +125,15 @@ public class MovieFilterService {
     }
 
     protected static class MovieResult {
-        private final List<MovieTableItem> movies;
+        private final List<MoviePage> movies;
         private final Long rowCount;
 
-        public MovieResult(List<MovieTableItem> movies, Long rowCount) {
+        public MovieResult(List<MoviePage> movies, Long rowCount) {
             this.movies = movies;
             this.rowCount = rowCount;
         }
 
-        public List<MovieTableItem> getMovies() {
+        public List<MoviePage> getMovies() {
             return movies;
         }
 

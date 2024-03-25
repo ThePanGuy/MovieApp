@@ -3,7 +3,7 @@ package com.myprojects.demo.services;
 import com.myprojects.demo.dto.movie.MovieFilter;
 import com.myprojects.demo.dto.movie.MovieForm;
 import com.myprojects.demo.dto.movie.MovieRecord;
-import com.myprojects.demo.dto.movie.MovieTableItem;
+import com.myprojects.demo.dto.movie.MoviePage;
 import com.myprojects.demo.entities.Movie;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.exceptions.InvalidInputException;
@@ -31,7 +31,7 @@ public class MovieService {
         this.movieFilterService = movieFilterService;
     }
 
-    public Page<MovieTableItem> findMovies(PagingRequest pagingRequest) {
+    public Page<MoviePage> findMovies(PagingRequest pagingRequest) {
         Sort sort = pagingRequest.hasSorting() ? pagingRequest.getSorting() : Sort.by("likes").descending();
         PageRequest pageRequest = PageRequest.of(pagingRequest.getPage(), pagingRequest.getSize(), sort);
 

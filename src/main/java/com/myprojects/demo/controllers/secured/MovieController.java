@@ -2,7 +2,7 @@ package com.myprojects.demo.controllers.secured;
 
 import com.myprojects.demo.dto.movie.MovieForm;
 import com.myprojects.demo.dto.movie.MovieRecord;
-import com.myprojects.demo.dto.movie.MovieTableItem;
+import com.myprojects.demo.dto.movie.MoviePage;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.requests.PagingRequest;
 import com.myprojects.demo.services.MovieService;
@@ -24,7 +24,7 @@ public class MovieController {
     }
 
     @PostMapping("/page")
-    public Page<MovieTableItem> getMoviePage(@AuthenticationPrincipal MovieUser user, @RequestBody PagingRequest pagingRequest) {
+    public Page<MoviePage> getMoviePage(@AuthenticationPrincipal MovieUser user, @RequestBody PagingRequest pagingRequest) {
         return movieService.findMovies(pagingRequest);
     }
 

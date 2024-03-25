@@ -3,7 +3,7 @@ package com.myprojects.demo.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myprojects.demo.dto.DecodedData;
 import com.myprojects.demo.dto.UserForm;
-import com.myprojects.demo.dto.movie.MovieTableItem;
+import com.myprojects.demo.dto.movie.MoviePage;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Role;
 import com.myprojects.demo.requests.PagingRequest;
@@ -40,7 +40,7 @@ public class HomeController {
     }
 
     @PostMapping("/movies")
-    public Page<MovieTableItem> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
+    public Page<MoviePage> getMoviesPage(@RequestBody PagingRequest pagingRequest) {
         return movieService.findMovies(pagingRequest);
     }
 
