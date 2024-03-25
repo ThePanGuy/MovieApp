@@ -4,6 +4,7 @@ import com.myprojects.demo.dto.movie.MovieReactions;
 import com.myprojects.demo.entities.MovieUser;
 import com.myprojects.demo.entities.Reaction;
 import com.myprojects.demo.services.ReactionService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,5 +31,14 @@ public class ReactionController {
     public MovieReactions hateMovie(@AuthenticationPrincipal MovieUser user, @PathVariable Long movieId) {
         Reaction reaction = reactionService.hateOrUnhateMovie(user, movieId);
         return reactionService.getReactions(reaction.getMovie());
+    }
+
+    @GetMapping("/movie/{movieId}")
+    public ResponseEntity<Boolean> getReactionForMovie(@AuthenticationPrincipal MovieUser user, @PathVariable Long movieId) {
+        Boolean ownReaction = reactionService.getMovieReactionForUser(user, movieId);
+        if (ownReaction == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(ownReaction);
     }
 }

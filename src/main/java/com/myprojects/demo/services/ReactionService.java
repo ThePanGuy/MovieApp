@@ -27,6 +27,13 @@ public class ReactionService {
         this.movieRepository = movieRepository;
     }
 
+    public Boolean getMovieReactionForUser(MovieUser user, Long movieId) {
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new EntityNotFoundException("Movie not found"));
+        Optional<Reaction> reaction = reactionRepository.findByMovieUserAndMovie(user, movie);
+        return reaction.map(Reaction::getIsLike).orElse(null);
+    }
+
     @Transactional
     public Reaction likeOrUnlikeMovie(MovieUser movieUser, Long movieId) {
         Movie movie = movieRepository.findById(movieId)
