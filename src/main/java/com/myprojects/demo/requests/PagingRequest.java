@@ -10,9 +10,6 @@ public class PagingRequest {
     private Order order;
     private Filter filter;
 
-    public PagingRequest() {
-    }
-
     public int getPage() {
         return page;
     }
@@ -61,12 +58,14 @@ public class PagingRequest {
         return filter.getFilterValue(name);
     }
 
+    public Long getLongFilterValue(String name) {
+        if (filter == null) return null;
+        return Long.parseLong(filter.getFilterValue(name));
+    }
+
     public static class Order {
         boolean isAsc;
         String property;
-
-        public Order() {
-        }
 
         public boolean getIsAsc() {
             return isAsc;

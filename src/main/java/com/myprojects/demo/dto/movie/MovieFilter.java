@@ -1,22 +1,21 @@
 package com.myprojects.demo.dto.movie;
 
-import com.myprojects.demo.entities.MovieUser;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 public class MovieFilter {
-    private final MovieUser movieUser;
+    private final Long uploadedById;
     private final Sort sort;
     private final PageRequest pageRequest;
 
     public MovieFilter(Builder builder) {
-        this.movieUser = builder.movieUser;
+        this.uploadedById = builder.uploadedById;
         this.sort = builder.sort;
         this.pageRequest = builder.pageRequest;
     }
 
-    public MovieUser getMovieUser() {
-        return movieUser;
+    public Long getUploadedById() {
+        return uploadedById;
     }
 
     public Sort getSort() {
@@ -28,12 +27,12 @@ public class MovieFilter {
     }
 
     public static class Builder {
-        private MovieUser movieUser;
+        private Long uploadedById;
         private Sort sort;
         private PageRequest pageRequest;
 
-        public Builder setMovieUser(MovieUser movieUser) {
-            this.movieUser = movieUser;
+        public Builder setUploadedById(Long uploadedById) {
+            this.uploadedById = uploadedById;
             return this;
         }
 

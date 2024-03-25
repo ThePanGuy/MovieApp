@@ -18,13 +18,14 @@ import java.util.*;
 @Service
 public class MovieFilterService {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final String QUERY_TEMPLATE = """
+    private static final String QUERY_TEMPLATE = """
                 SELECT m.id, m.title, m.description, m.creation_date, mu.id as user_id, mu.username as username,
                 SUM(CASE WHEN r.is_like = true THEN 1 ELSE 0 END) AS likes,
                 SUM(CASE WHEN r.is_like = false THEN 1 ELSE 0 END) AS hates
                 FROM movie m
                 JOIN movie_user mu on mu.id = m.uploaded_by
                 LEFT JOIN reaction r on r.movie_id = m.id
+                ${whereClause}
                 GROUP BY m.id, m.title, m.description, m.creation_date, mu.id
                 ORDER BY likes desc
             """;
@@ -42,9 +43,9 @@ public class MovieFilterService {
         Map<String, Object> queryParams = new HashMap<>();
 
         StringBuilder whereClause = new StringBuilder();
-        if (filter.getMovieUser() != null) {
-            whereClause.append(" WHERE m.uploaded_by = (:movieUserId)");
-            queryParams.put("movieUserId", filter.getMovieUser().getId());
+        if (filter.getUploadedById() != null) {
+            whereClause.append(" where mu.id = (:movieUserId)");
+            queryParams.put("movieUserId", filter.getUploadedById());
         }
         queryParams.put("whereClause", whereClause);
 
