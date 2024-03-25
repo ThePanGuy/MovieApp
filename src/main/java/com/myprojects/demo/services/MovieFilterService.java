@@ -3,6 +3,7 @@ package com.myprojects.demo.services;
 import com.myprojects.demo.dto.movie.MovieFilter;
 import com.myprojects.demo.dto.movie.MovieTableItem;
 import com.myprojects.demo.utilities.PaginationUtils;
+import com.myprojects.demo.utilities.StringUtilities;
 import org.mvel2.templates.TemplateRuntime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -101,7 +102,7 @@ public class MovieFilterService {
         query.append(" order by ");
         while (iterator.hasNext()) {
             Sort.Order sortOrder = iterator.next();
-            query.append(sortOrder.getProperty())
+            query.append(StringUtilities.camelCaseToSnakeCase(sortOrder.getProperty()))
                     .append(" ")
                     .append(sortOrder.getDirection().name().toLowerCase());
             if (iterator.hasNext()) {
