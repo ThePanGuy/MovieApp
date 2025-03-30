@@ -7,8 +7,8 @@ import javax.persistence.*;
 @Table(name = "reaction")
 public class Reaction {
     @Id
-    @GeneratedValue(generator = "reaction_seq")
-    @SequenceGenerator(name = "reaction_seq", sequenceName = "reaction_seq", allocationSize = 1)
+    @GeneratedValue(generator = "reaction_id_seq")
+    @SequenceGenerator(name = "reaction_id_seq", sequenceName = "reaction_id_seq", allocationSize = 1)
     private Long id;
 
     @ManyToOne
@@ -20,20 +20,15 @@ public class Reaction {
     private Movie movie;
 
     @Column
-    private Boolean isLike;
+    private ReactionType type;
 
     public Reaction() {
     }
 
-    public Reaction(MovieUser movieUser, Movie movie) {
+    public Reaction(MovieUser movieUser, Movie movie, ReactionType type) {
         this.movieUser = movieUser;
         this.movie = movie;
-    }
-
-    public Reaction(MovieUser movieUser, Movie movie, Boolean isLike) {
-        this.movieUser = movieUser;
-        this.movie = movie;
-        this.isLike = isLike;
+        this.type = type;
     }
 
     public Long getId() {
@@ -60,21 +55,25 @@ public class Reaction {
         this.movie = movie;
     }
 
-    public Boolean getIsLike() {
-        return isLike;
+    public ReactionType getType() {
+        return type;
     }
 
-    public void setIsLike(Boolean isLike) {
-        this.isLike = isLike;
+    public void setType(ReactionType type) {
+        this.type = type;
     }
 
     @Transient
     public boolean getIfLike() {
-        return isLike != null && isLike;
+        return type != null && type.equals(ReactionType.LIKE);
     }
 
     @Transient
     public boolean getIfHate() {
-        return isLike != null && !isLike;
+        return type != null && type.equals(ReactionType.HATE);
+    }
+
+    public enum ReactionType {
+        LIKE, HATE
     }
 }

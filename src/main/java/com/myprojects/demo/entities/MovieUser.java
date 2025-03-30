@@ -15,8 +15,8 @@ import java.util.List;
 @Table(name = "movie_user")
 public class MovieUser implements UserDetails {
     @Id
-    @GeneratedValue(generator = "movie_user_seq")
-    @SequenceGenerator(name = "movie_user_seq", sequenceName = "movie_user_seq", allocationSize = 1)
+    @GeneratedValue(generator = "movie_user_id_seq")
+    @SequenceGenerator(name = "movie_user_id_seq", sequenceName = "movie_user_id_seq", allocationSize = 1)
     private Long id;
 
     @Column
@@ -25,6 +25,7 @@ public class MovieUser implements UserDetails {
     @Column
     @JsonIgnore
     private String password;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "movie_user_role",
