@@ -20,6 +20,7 @@ public class Reaction {
     private Movie movie;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ReactionType type;
 
     public Reaction() {

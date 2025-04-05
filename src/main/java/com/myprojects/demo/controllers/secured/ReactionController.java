@@ -23,14 +23,19 @@ public class ReactionController {
     @GetMapping("/like/{movieId}")
     public MovieReactions likeMovie(@AuthenticationPrincipal MovieUser user,
                                     @PathVariable Long movieId) {
-        Reaction reaction = reactionService.likeOrUnlikeMovie(user, movieId);
-        return reactionService.getReactions(reaction.getMovie());
+        Reaction reaction = reactionService.addReaction(user, movieId, Reaction.ReactionType.LIKE);
+        return new MovieReactions(reaction.getMovie());
     }
 
     @GetMapping("/hate/{movieId}")
     public MovieReactions hateMovie(@AuthenticationPrincipal MovieUser user, @PathVariable Long movieId) {
-        Reaction reaction = reactionService.hateOrUnhateMovie(user, movieId);
-        return reactionService.getReactions(reaction.getMovie());
+        Reaction reaction = reactionService.addReaction(user, movieId, Reaction.ReactionType.HATE);
+        return new MovieReactions(reaction.getMovie());
+    }
+
+    @GetMapping("/remove/{movieId}")
+    public MovieReactions removeReaction(@AuthenticationPrincipal MovieUser user, @PathVariable Long movieId) {
+        return new MovieReactions(reactionService.removeReaction(user, movieId));
     }
 
     @GetMapping("/movie/{movieId}")

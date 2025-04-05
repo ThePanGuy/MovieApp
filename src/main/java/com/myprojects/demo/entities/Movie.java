@@ -88,4 +88,14 @@ public class Movie {
     public void setReactions(List<Reaction> reactions) {
         this.reactions = reactions;
     }
+
+    @Transient
+    public Long getLikes() {
+        return getReactions() != null ? getReactions().stream().filter(Reaction::getIfLike).count() : 0;
+    }
+
+    @Transient
+    public Long getHates() {
+        return getReactions() != null ? getReactions().stream().filter(Reaction::getIfHate).count() : 0;
+    }
 }

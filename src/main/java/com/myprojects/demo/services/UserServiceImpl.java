@@ -37,7 +37,6 @@ public class UserServiceImpl implements UserService {
             log.error("User not found.");
             throw new UsernameNotFoundException("User not found in the database");
         }
-        log.info("User found. {}", username);
         return user.get();
     }
 

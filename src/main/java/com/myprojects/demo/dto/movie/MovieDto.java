@@ -1,31 +1,31 @@
 package com.myprojects.demo.dto.movie;
 
 import com.myprojects.demo.entities.Movie;
+import com.myprojects.demo.entities.MovieUser;
+import com.myprojects.demo.entities.Reaction;
 
 import java.time.LocalDateTime;
 
-public class MoviePage {
+public class MovieDto {
     private Long id;
     private String title;
     private String description;
     private LocalDateTime creationDate;
-    private Long userId;
-    private String username;
+    private MovieUser uploadedBy;
     private Long likes;
     private Long hates;
-    private Long rowCount;
 
-    public MoviePage() {}
+    public MovieDto() {
+    }
 
-    public MoviePage(Movie movie) {
+    public MovieDto(Movie movie) {
         this.id = movie.getId();
         this.title = movie.getTitle();
         this.description = movie.getDescription();
         this.creationDate = movie.getCreationDate();
-        this.userId = movie.getUploadedBy().getId();
-        this.username = movie.getUploadedBy().getUsername();
-        this.likes = movie.getLikes();
-        this.hates = movie.getHates();
+        this.uploadedBy = movie.getUploadedBy();
+        this.likes = movie.getReactions().stream().filter(Reaction::getIfLike).count();
+        this.hates = movie.getReactions().stream().filter(Reaction::getIfHate).count();
     }
 
     public Long getId() {
@@ -60,20 +60,12 @@ public class MoviePage {
         this.creationDate = creationDate;
     }
 
-    public Long getUserId() {
-        return userId;
+    public MovieUser getUploadedBy() {
+        return uploadedBy;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUploadedBy(MovieUser uploadedBy) {
+        this.uploadedBy = uploadedBy;
     }
 
     public Long getLikes() {
@@ -90,13 +82,5 @@ public class MoviePage {
 
     public void setHates(Long hates) {
         this.hates = hates;
-    }
-
-    public Long getRowCount() {
-        return rowCount;
-    }
-
-    public void setRowCount(Long rowCount) {
-        this.rowCount = rowCount;
     }
 }
