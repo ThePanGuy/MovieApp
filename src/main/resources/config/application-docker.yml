@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/vesselpro
+    url: jdbc:postgresql://db:5432/vesselpro
     username: vesselpro
     password: vesselpro
     driver-class-name: org.postgresql.Driver

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+#  todo: see how to start container for this
+  db:
+    image: postgres:15.3
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: vesselpro
+      POSTGRES_USER: vesselpro
+      POSTGRES_PASSWORD: vesselpro
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/pnikolidakis/dev/databases/postgres/2024-12-20:/var/lib/postgresql/data
+    networks:
+      - vesselnet
+
+  app:
+    build: .
+    container_name: springboot-app
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/vesselpro
+      SPRING_DATASOURCE_USERNAME: vesselpro
+      SPRING_DATASOURCE_PASSWORD: vesselpro
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8011:8011"
+    networks:
+      - vesselnet
+
+  frontend:
+    build:
+      context: ../vite-movie-ui # Path to your React app folder
+    container_name: react-frontend
+    ports:
+      - "3001:3001"  # Map React's port 80 (inside container) to 3000 (host machine)
+    networks:
+      - vesselnet
+
+networks:
+  vesselnet:
+    driver: bridge
