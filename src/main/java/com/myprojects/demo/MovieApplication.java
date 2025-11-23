@@ -9,10 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableScheduling
-public class RandomOneApplication {
+public class MovieApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RandomOneApplication.class, args);
+		SpringApplication.run(MovieApplication.class, args);
 	}
 
 
